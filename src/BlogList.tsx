@@ -41,7 +41,7 @@ function BlogCard({ slug, title, date, readTime, category, excerpt, index, isDar
   )
 }
 
-export default function BlogList({ isDark, onContact }: { isDark: boolean; onContact: () => void }) {
+export default function BlogList({ isDark }: { isDark: boolean; onContact?: () => void }) {
   return (
     <div className="min-h-screen pt-24 pb-16 px-5 md:px-12">
       <div className="max-w-4xl mx-auto">
