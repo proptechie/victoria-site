@@ -19,7 +19,7 @@ function BlogCard({ slug, title, date, readTime, category, excerpt, index, isDar
       whileHover={{ scale: 1.015, y: -4 }}
       className="cursor-none"
     >
-      <Link to={`/blog/${slug}`} className="block no-underline">
+      <Link to={`/writing/${slug}`} className="block no-underline">
         <div className={`rounded-2xl p-6 md:p-8 border transition-all duration-300 group ${isDark ? 'border-white/5 bg-white/[0.02] hover:border-pink-accent/20 hover:shadow-[0_0_40px_rgba(255,45,120,0.08)]' : 'bg-white border-[#1a1a1a]/5 shadow-sm hover:shadow-lg hover:shadow-pink-accent/10 hover:border-pink-accent/15'}`}>
           <div className="flex items-center gap-3 mb-4">
             <span className="bg-pink-accent/10 text-pink-accent rounded-full px-3 py-0.5 text-[11px] font-body font-semibold uppercase tracking-wider">{category}</span>

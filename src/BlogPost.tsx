@@ -12,7 +12,7 @@ export default function BlogPost({ isDark }: { isDark: boolean }) {
       <div className="min-h-screen pt-24 pb-16 px-5 md:px-12 text-center">
         <div className="max-w-2xl mx-auto">
           <h1 className={`text-4xl font-heading italic mb-4 ${isDark ? 'text-white' : 'text-[#1a1a1a]'}`}>Post not found</h1>
-          <Link to="/blog" className="text-pink-accent font-body text-sm hover:underline cursor-none">Back to all posts</Link>
+          <Link to="/writing" className="text-pink-accent font-body text-sm hover:underline cursor-none">Back to all posts</Link>
         </div>
       </div>
     )
@@ -22,7 +22,7 @@ export default function BlogPost({ isDark }: { isDark: boolean }) {
     <div className="min-h-screen pt-24 pb-16 px-5 md:px-12">
       <article className="max-w-3xl mx-auto">
         {/* Back */}
-        <Link to="/blog" className={`inline-flex items-center gap-1.5 text-sm font-body mb-10 hover:text-pink-accent transition-colors cursor-none ${isDark ? 'text-white/50' : 'text-[#1a1a1a]/50'}`}>
+        <Link to="/writing" className={`inline-flex items-center gap-1.5 text-sm font-body mb-10 hover:text-pink-accent transition-colors cursor-none ${isDark ? 'text-white/50' : 'text-[#1a1a1a]/50'}`}>
           <ArrowLeft className="h-4 w-4" /> All posts
         </Link>
 
@@ -88,13 +88,13 @@ export default function BlogPost({ isDark }: { isDark: boolean }) {
             return (
               <div className="flex flex-col sm:flex-row justify-between gap-4">
                 {prev ? (
-                  <Link to={`/blog/${prev.slug}`} className={`group flex-1 cursor-none ${isDark ? 'text-white/50 hover:text-white' : 'text-[#1a1a1a]/50 hover:text-[#1a1a1a]'}`}>
+                  <Link to={`/writing/${prev.slug}`} className={`group flex-1 cursor-none ${isDark ? 'text-white/50 hover:text-white' : 'text-[#1a1a1a]/50 hover:text-[#1a1a1a]'}`}>
                     <span className="text-xs font-body uppercase tracking-wider text-pink-accent/60">Previous</span>
                     <p className="font-heading italic text-base mt-1 group-hover:text-pink-accent transition-colors">{prev.title}</p>
                   </Link>
                 ) : <div />}
                 {next ? (
-                  <Link to={`/blog/${next.slug}`} className={`group flex-1 text-right cursor-none ${isDark ? 'text-white/50 hover:text-white' : 'text-[#1a1a1a]/50 hover:text-[#1a1a1a]'}`}>
+                  <Link to={`/writing/${next.slug}`} className={`group flex-1 text-right cursor-none ${isDark ? 'text-white/50 hover:text-white' : 'text-[#1a1a1a]/50 hover:text-[#1a1a1a]'}`}>
                     <span className="text-xs font-body uppercase tracking-wider text-pink-accent/60">Next</span>
                     <p className="font-heading italic text-base mt-1 group-hover:text-pink-accent transition-colors">{next.title}</p>
                   </Link>

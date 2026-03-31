@@ -240,7 +240,7 @@ function BerkeleyIcon({ className, isDark }: { className?: string; isDark: boole
 // ---- Theme Hook ----
 function useTheme() {
   const [mode, setMode] = useState<'dark' | 'light'>(() => {
-    if (typeof window !== 'undefined') return (localStorage.getItem('theme') as 'dark' | 'light') || 'dark'
+    if (typeof window !== 'undefined') return (localStorage.getItem('theme') as 'dark' | 'light') || 'light'
     return 'dark'
   })
   useEffect(() => {
@@ -409,11 +409,11 @@ export default function App() {
       <div className={`min-h-screen overflow-x-hidden transition-colors duration-500 cursor-none ${d ? 'bg-[#0a0a0a] text-white' : 'bg-[#faf7f5] text-[#1a1a1a]'}`}>
         <B2Cursor />
         <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} isDark={d} />
-        <NavBar isDark={d} toggle={toggle} onContact={() => setContactOpen(true)} />
+        <NavBar isDark={d} onContact={() => setContactOpen(true)} />
         <Routes>
-          <Route path="/" element={<HomePage isDark={d} onContact={() => setContactOpen(true)} />} />
-          <Route path="/blog" element={<BlogList isDark={d} onContact={() => setContactOpen(true)} />} />
-          <Route path="/blog/:slug" element={<BlogPost isDark={d} />} />
+          <Route path="/" element={<HomePage isDark={d} onContact={() => setContactOpen(true)} onToggle={toggle} />} />
+          <Route path="/writing" element={<BlogList isDark={d} onContact={() => setContactOpen(true)} />} />
+          <Route path="/writing/:slug" element={<BlogPost isDark={d} />} />
         </Routes>
       </div>
     </BrowserRouter>
@@ -421,7 +421,7 @@ export default function App() {
 }
 
 // ---- Shared Navbar (extracted) ----
-function NavBar({ isDark: d, toggle, onContact }: { isDark: boolean; toggle: () => void; onContact: () => void }) {
+function NavBar({ isDark: d, onContact }: { isDark: boolean; onContact: () => void }) {
   return (
     <nav className="fixed top-4 left-0 right-0 z-50 px-5 md:px-12">
       <div className="flex items-center justify-between max-w-6xl mx-auto">
@@ -432,20 +432,14 @@ function NavBar({ isDark: d, toggle, onContact }: { isDark: boolean; toggle: () 
               {item}
             </a>
           ))}
-          <Link to="/blog" className={`px-3 py-1.5 text-sm font-medium font-body transition-colors cursor-none no-underline ${d ? 'text-white/80 hover:text-white' : 'text-[#1a1a1a]/60 hover:text-[#1a1a1a]'}`}>
-            Blog
+          <Link to="/writing" className={`px-3 py-1.5 text-sm font-medium font-body transition-colors cursor-none no-underline ${d ? 'text-white/80 hover:text-white' : 'text-[#1a1a1a]/60 hover:text-[#1a1a1a]'}`}>
+            Writing
           </Link>
-          <button onClick={toggle} className={`p-2 rounded-full transition-colors cursor-none ${d ? 'text-white/60 hover:text-white' : 'text-[#1a1a1a]/50 hover:text-[#1a1a1a]'}`}>
-            {d ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
           <button onClick={onContact} className="bg-pink-accent text-white rounded-full px-4 py-1.5 text-sm font-medium font-body flex items-center gap-1.5 hover:bg-pink-soft transition-colors cursor-none">
             Get in Touch <ArrowUpRight className="h-3.5 w-3.5" />
           </button>
         </div>
         <div className="flex items-center gap-2 md:hidden">
-          <button onClick={toggle} className={`p-2 cursor-none ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>
-            {d ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
           <button onClick={onContact} className="bg-pink-accent text-white rounded-full px-3 py-1.5 text-xs font-medium font-body cursor-none">
             Contact
           </button>
@@ -456,7 +450,7 @@ function NavBar({ isDark: d, toggle, onContact }: { isDark: boolean; toggle: () 
 }
 
 // ---- Home Page ----
-function HomePage({ isDark: d, onContact }: { isDark: boolean; onContact: () => void }) {
+function HomePage({ isDark: d, onContact, onToggle }: { isDark: boolean; onContact: () => void; onToggle: () => void }) {
   const heroRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
@@ -689,8 +683,12 @@ function HomePage({ isDark: d, onContact }: { isDark: boolean; onContact: () => 
           <p className={`font-body text-xs mt-3 ${d ? 'text-white/15' : 'text-[#1a1a1a]/15'}`}>-- Winston Churchill</p>
         </div>
 
-        <div className={`mt-8 pt-6 border-t flex flex-col md:flex-row items-center justify-between gap-2 text-xs font-body ${d ? 'border-white/5 text-white/25' : 'border-[#1a1a1a]/5 text-[#1a1a1a]/25'}`}>
+        <div className={`mt-8 pt-6 border-t flex flex-col md:flex-row items-center justify-between gap-3 text-xs font-body ${d ? 'border-white/5 text-white/25' : 'border-[#1a1a1a]/5 text-[#1a1a1a]/25'}`}>
           <span className={`font-heading italic text-base ${d ? 'text-white/30' : 'text-[#1a1a1a]/30'}`}>Victoria Elfend</span>
+          <button onClick={onToggle} className={`flex items-center gap-1.5 text-xs font-body cursor-none px-3 py-1.5 rounded-full transition-colors ${d ? 'text-white/30 hover:text-white/60 bg-white/[0.03] hover:bg-white/[0.06]' : 'text-[#1a1a1a]/30 hover:text-[#1a1a1a]/60 bg-black/[0.02] hover:bg-black/[0.04]'}`}>
+            {d ? <Sun className="h-3 w-3" /> : <Moon className="h-3 w-3" />}
+            {d ? 'Light mode' : 'Dark mode'}
+          </button>
           <span>Washington D.C. | Newport Coast, CA</span>
         </div>
       </section>
