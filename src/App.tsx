@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useInView, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react'
 import { ArrowUpRight, Mail, MapPin, Shield, Rocket, Target, Users, ChevronDown, Sun, Moon } from 'lucide-react'
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router'
+import BlogList from './BlogList'
+import BlogPost from './BlogPost'
 
 // ---- LinkedIn Icon ----
 function LinkedinIcon({ className }: { className?: string }) {
@@ -382,57 +385,85 @@ function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () =>
   )
 }
 
+// ---- Scroll to top on route change ----
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
+  return null
+}
+
 // ============================================================
-// MAIN APP
+// MAIN APP (with router)
 // ============================================================
 export default function App() {
   const [authed, setAuthed] = useState(() => sessionStorage.getItem('ve-auth') === '1')
-  const [contactOpen, setContactOpen] = useState(false)
-  const heroRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
-  const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1])
   const { mode, toggle } = useTheme()
-  const d = mode === 'dark' // shorthand
+  const d = mode === 'dark'
+  const [contactOpen, setContactOpen] = useState(false)
 
   if (!authed) return <PasswordGate onUnlock={() => setAuthed(true)} />
 
   return (
-    <div className={`min-h-screen overflow-x-hidden transition-colors duration-500 cursor-none ${d ? 'bg-[#0a0a0a] text-white' : 'bg-[#faf7f5] text-[#1a1a1a]'}`}>
+    <BrowserRouter>
+      <ScrollToTop />
+      <div className={`min-h-screen overflow-x-hidden transition-colors duration-500 cursor-none ${d ? 'bg-[#0a0a0a] text-white' : 'bg-[#faf7f5] text-[#1a1a1a]'}`}>
+        <B2Cursor />
+        <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} isDark={d} />
+        <NavBar isDark={d} toggle={toggle} onContact={() => setContactOpen(true)} />
+        <Routes>
+          <Route path="/" element={<HomePage isDark={d} onContact={() => setContactOpen(true)} />} />
+          <Route path="/blog" element={<BlogList isDark={d} onContact={() => setContactOpen(true)} />} />
+          <Route path="/blog/:slug" element={<BlogPost isDark={d} />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  )
+}
 
-      <B2Cursor />
-      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} isDark={d} />
-
-      {/* ===== NAVBAR ===== */}
-      <nav className="fixed top-4 left-0 right-0 z-50 px-5 md:px-12">
-        <div className="flex items-center justify-between max-w-6xl mx-auto">
-          <a href="#" className={`font-heading italic text-2xl cursor-none ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>VE</a>
-
-          <div className={`hidden md:flex rounded-full px-2 py-1.5 items-center gap-1 ${d ? 'liquid-glass' : 'bg-white/80 backdrop-blur-md shadow-lg shadow-black/5 border border-black/[0.04]'}`}>
-            {['Experience', 'Impact', 'Education'].map(item => (
-              <a key={item} href={`#${item.toLowerCase()}`} className={`px-3 py-1.5 text-sm font-medium font-body transition-colors cursor-none ${d ? 'text-white/80 hover:text-white' : 'text-[#1a1a1a]/60 hover:text-[#1a1a1a]'}`}>
-                {item}
-              </a>
-            ))}
-            <button onClick={toggle} className={`p-2 rounded-full transition-colors cursor-none ${d ? 'text-white/60 hover:text-white' : 'text-[#1a1a1a]/50 hover:text-[#1a1a1a]'}`}>
-              {d ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </button>
-            <button onClick={() => setContactOpen(true)} className="bg-pink-accent text-white rounded-full px-4 py-1.5 text-sm font-medium font-body flex items-center gap-1.5 hover:bg-pink-soft transition-colors cursor-none">
-              Get in Touch <ArrowUpRight className="h-3.5 w-3.5" />
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2 md:hidden">
-            <button onClick={toggle} className={`p-2 cursor-none ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>
-              {d ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </button>
-            <button onClick={() => setContactOpen(true)} className="bg-pink-accent text-white rounded-full px-3 py-1.5 text-xs font-medium font-body cursor-none">
-              Contact
-            </button>
-          </div>
+// ---- Shared Navbar (extracted) ----
+function NavBar({ isDark: d, toggle, onContact }: { isDark: boolean; toggle: () => void; onContact: () => void }) {
+  return (
+    <nav className="fixed top-4 left-0 right-0 z-50 px-5 md:px-12">
+      <div className="flex items-center justify-between max-w-6xl mx-auto">
+        <Link to="/" className={`font-heading italic text-2xl cursor-none no-underline ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>VE</Link>
+        <div className={`hidden md:flex rounded-full px-2 py-1.5 items-center gap-1 ${d ? 'liquid-glass' : 'bg-white/80 backdrop-blur-md shadow-lg shadow-black/5 border border-black/[0.04]'}`}>
+          {['Experience', 'Impact', 'Education'].map(item => (
+            <a key={item} href={`/#${item.toLowerCase()}`} className={`px-3 py-1.5 text-sm font-medium font-body transition-colors cursor-none no-underline ${d ? 'text-white/80 hover:text-white' : 'text-[#1a1a1a]/60 hover:text-[#1a1a1a]'}`}>
+              {item}
+            </a>
+          ))}
+          <Link to="/blog" className={`px-3 py-1.5 text-sm font-medium font-body transition-colors cursor-none no-underline ${d ? 'text-white/80 hover:text-white' : 'text-[#1a1a1a]/60 hover:text-[#1a1a1a]'}`}>
+            Blog
+          </Link>
+          <button onClick={toggle} className={`p-2 rounded-full transition-colors cursor-none ${d ? 'text-white/60 hover:text-white' : 'text-[#1a1a1a]/50 hover:text-[#1a1a1a]'}`}>
+            {d ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+          <button onClick={onContact} className="bg-pink-accent text-white rounded-full px-4 py-1.5 text-sm font-medium font-body flex items-center gap-1.5 hover:bg-pink-soft transition-colors cursor-none">
+            Get in Touch <ArrowUpRight className="h-3.5 w-3.5" />
+          </button>
         </div>
-      </nav>
+        <div className="flex items-center gap-2 md:hidden">
+          <button onClick={toggle} className={`p-2 cursor-none ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>
+            {d ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+          <button onClick={onContact} className="bg-pink-accent text-white rounded-full px-3 py-1.5 text-xs font-medium font-body cursor-none">
+            Contact
+          </button>
+        </div>
+      </div>
+    </nav>
+  )
+}
 
+// ---- Home Page ----
+function HomePage({ isDark: d, onContact }: { isDark: boolean; onContact: () => void }) {
+  const heroRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
+  const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1])
+
+  return (
+    <div>
       {/* ===== HERO ===== */}
       <section ref={heroRef} className="relative h-[100svh] flex flex-col overflow-hidden">
         <motion.div style={{ scale: heroScale }} className="absolute inset-0 z-0">
@@ -477,7 +508,7 @@ export default function App() {
             transition={{ duration: 0.6, delay: 1.1 }}
             className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5 mt-8"
           >
-            <button onClick={() => setContactOpen(true)} className={`rounded-full px-5 py-2.5 text-sm font-medium font-body flex items-center gap-2 transition-all cursor-none ${d ? 'liquid-glass-strong text-white hover:bg-pink-accent/20' : 'bg-pink-accent text-white hover:bg-pink-soft shadow-lg shadow-pink-accent/20'}`}>
+            <button onClick={onContact} className={`rounded-full px-5 py-2.5 text-sm font-medium font-body flex items-center gap-2 transition-all cursor-none ${d ? 'liquid-glass-strong text-white hover:bg-pink-accent/20' : 'bg-pink-accent text-white hover:bg-pink-soft shadow-lg shadow-pink-accent/20'}`}>
               Connect with Victoria <ArrowUpRight className="h-4 w-4" />
             </button>
             <a href="#experience" className={`text-sm font-medium font-body flex items-center gap-1.5 transition-colors cursor-none ${d ? 'text-white/60 hover:text-white' : 'text-[#1a1a1a]/50 hover:text-[#1a1a1a]'}`}>
@@ -644,7 +675,7 @@ export default function App() {
             <p className={`font-body font-light mb-8 max-w-xl mx-auto text-sm md:text-base ${d ? 'text-white/50' : 'text-[#1a1a1a]/45'}`}>
               I think in data models, build frameworks quickly, and execute at the pace the problem demands. Ready to move on day one.
             </p>
-            <button onClick={() => setContactOpen(true)} className={`rounded-full px-8 py-3 text-sm font-medium font-body flex items-center gap-2 transition-all cursor-none mx-auto ${d ? 'liquid-glass-strong text-white hover:bg-pink-accent/20' : 'bg-pink-accent text-white hover:bg-pink-soft shadow-lg shadow-pink-accent/20'}`}>
+            <button onClick={onContact} className={`rounded-full px-8 py-3 text-sm font-medium font-body flex items-center gap-2 transition-all cursor-none mx-auto ${d ? 'liquid-glass-strong text-white hover:bg-pink-accent/20' : 'bg-pink-accent text-white hover:bg-pink-soft shadow-lg shadow-pink-accent/20'}`}>
               Get in Touch <ArrowUpRight className="h-4 w-4" />
             </button>
           </motion.div>
