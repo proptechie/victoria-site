@@ -207,23 +207,29 @@ function ExperienceCard({ role, company, location, period, bullets, accent = fal
 
 // ---- School Icons ----
 function RandIcon({ className, isDark }: { className?: string; isDark: boolean }) {
+  // Pardee RAND - blue shield with torch
   return (
     <svg className={className} viewBox="0 0 48 48" fill="none">
-      <rect x="4" y="4" width="40" height="40" rx="8" fill={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'} stroke={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'} strokeWidth="1"/>
-      <text x="24" y="29" textAnchor="middle" fontFamily="'Barlow', sans-serif" fontWeight="700" fontSize="13" fill={isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)'}>RAND</text>
+      <rect x="2" y="2" width="44" height="44" rx="10" fill={isDark ? '#1a365d' : '#1a4480'} />
+      <path d="M24 8 L34 16 L34 30 C34 36 29 40 24 42 C19 40 14 36 14 30 L14 16 Z" fill="none" stroke="white" strokeWidth="1.5" opacity="0.8"/>
+      <rect x="22.5" y="14" width="3" height="16" rx="1" fill="white" opacity="0.9"/>
+      <circle cx="24" cy="12" r="2" fill="white" opacity="0.9"/>
+      <text x="24" y="46" textAnchor="middle" fontFamily="'Barlow', sans-serif" fontWeight="600" fontSize="0" fill="transparent">RAND</text>
     </svg>
   )
 }
 
 function BerkeleyIcon({ className, isDark }: { className?: string; isDark: boolean }) {
+  // UC Berkeley - navy/gold with campanile
   return (
     <svg className={className} viewBox="0 0 48 48" fill="none">
-      <rect x="4" y="4" width="40" height="40" rx="8" fill={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'} stroke={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'} strokeWidth="1"/>
-      {/* Campanile tower silhouette */}
-      <rect x="22" y="10" width="4" height="24" rx="1" fill={isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.35)'}/>
-      <rect x="19" y="10" width="10" height="4" rx="1" fill={isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.35)'}/>
-      <rect x="17" y="34" width="14" height="3" rx="1" fill={isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.35)'}/>
-      <text x="24" y="44" textAnchor="middle" fontFamily="'Barlow', sans-serif" fontWeight="600" fontSize="6" fill={isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.3)'}>CAL</text>
+      <rect x="2" y="2" width="44" height="44" rx="10" fill={isDark ? '#003262' : '#003262'} />
+      {/* Campanile tower */}
+      <rect x="22" y="10" width="4" height="22" fill="#FDB515"/>
+      <polygon points="20,10 28,10 24,6" fill="#FDB515"/>
+      <rect x="19" y="32" width="10" height="3" fill="#FDB515"/>
+      <rect x="17" y="35" width="14" height="2" rx="0.5" fill="#FDB515"/>
+      <text x="24" y="46" textAnchor="middle" fontFamily="'Barlow', sans-serif" fontWeight="600" fontSize="0" fill="transparent">CAL</text>
     </svg>
   )
 }
@@ -396,7 +402,7 @@ export default function App() {
           <a href="#" className={`font-heading italic text-2xl cursor-none ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>VE</a>
 
           <div className={`hidden md:flex rounded-full px-2 py-1.5 items-center gap-1 ${d ? 'liquid-glass' : 'bg-white/80 backdrop-blur-md shadow-lg shadow-black/5 border border-black/[0.04]'}`}>
-            {['About', 'Experience', 'Impact', 'Education'].map(item => (
+            {['Experience', 'Impact', 'Education'].map(item => (
               <a key={item} href={`#${item.toLowerCase()}`} className={`px-3 py-1.5 text-sm font-medium font-body transition-colors cursor-none ${d ? 'text-white/80 hover:text-white' : 'text-[#1a1a1a]/60 hover:text-[#1a1a1a]'}`}>
                 {item}
               </a>
@@ -473,18 +479,31 @@ export default function App() {
           </motion.div>
         </motion.div>
 
-        {/* Bottom tagline */}
-        <div className="relative z-10 flex flex-col items-center pb-8">
-          <div className={`rounded-full px-3 py-1 text-[10px] md:text-xs font-medium font-body ${d ? 'liquid-glass text-white/80' : 'bg-white/80 backdrop-blur-md text-[#1a1a1a]/60 shadow-sm'}`}>
-            Operating at the intersection of defense, technology, and venture capital
-          </div>
-        </div>
+        <div className="relative z-10 pb-8" />
       </section>
 
       {/* ===== ABOUT ===== */}
       <section id="about" className="py-16 md:py-24 px-5 md:px-12 max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-10 md:gap-14 items-start">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
+            {/* Profile picture + contact buttons */}
+            <div className="flex items-center gap-4 mb-8">
+              <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-pink-accent/30 flex-shrink-0 ${d ? 'bg-white/5' : 'bg-pink-accent/5'}`}>
+                <img src="/headshot.jpg" alt="Victoria Elfend" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+              </div>
+              <div>
+                <h3 className={`font-body font-semibold text-base ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>Victoria Elfend</h3>
+                <div className="flex items-center gap-3 mt-2">
+                  <a href="mailto:victoriapelfend@gmail.com" className={`flex items-center gap-1.5 text-xs hover:text-pink-accent transition-colors font-body cursor-none ${d ? 'text-white/50' : 'text-[#1a1a1a]/40'}`}>
+                    <Mail className="h-3.5 w-3.5" /> Email
+                  </a>
+                  <a href="https://linkedin.com/in/victoria-elfend" target="_blank" className={`flex items-center gap-1.5 text-xs hover:text-pink-accent transition-colors font-body cursor-none ${d ? 'text-white/50' : 'text-[#1a1a1a]/40'}`}>
+                    <LinkedinIcon className="h-3.5 w-3.5" /> LinkedIn
+                  </a>
+                </div>
+              </div>
+            </div>
+
             <p className="text-pink-accent text-xs font-body font-semibold tracking-[0.2em] uppercase mb-3">About</p>
             <h2 className={`text-3xl md:text-5xl font-heading italic leading-[0.95] mb-6 ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>
               Where startups meet the mission
@@ -493,14 +512,6 @@ export default function App() {
               <p>My path to defense was not traditional. It was built on frustration, curiosity, and an urgent question: why can the most powerful military in the world not field the technology that future warfare demands?</p>
               <p>After UC Berkeley, I entered the defense-startup ecosystem and immediately hit a system structurally designed to reject the very innovation it claimed to want. I became obsessed with why.</p>
               <p>Now I operate at the seam between venture-backed deep tech and prime contractor systems -- identifying capability gaps, structuring pilot engagements, and accelerating adoption cycles.</p>
-            </div>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-5 mt-8">
-              <a href="mailto:victoriapelfend@gmail.com" className={`flex items-center gap-2 text-xs md:text-sm hover:text-pink-accent transition-colors font-body cursor-none ${d ? 'text-white/50' : 'text-[#1a1a1a]/40'}`}>
-                <Mail className="h-3.5 w-3.5" /> victoriapelfend@gmail.com
-              </a>
-              <a href="https://linkedin.com/in/victoria-elfend" target="_blank" className={`flex items-center gap-2 text-xs md:text-sm hover:text-pink-accent transition-colors font-body cursor-none ${d ? 'text-white/50' : 'text-[#1a1a1a]/40'}`}>
-                <LinkedinIcon className="h-3.5 w-3.5" /> LinkedIn
-              </a>
             </div>
           </motion.div>
 
@@ -513,11 +524,12 @@ export default function App() {
               { icon: Target, label: 'Pilot Execution', desc: '52% adoption rate' },
               { icon: Users, label: 'Network Building', desc: '150+ D.C. connections' },
             ].map(({ icon: Icon, label, desc }) => (
-              <div key={label} className={`rounded-2xl p-4 md:p-5 flex flex-col items-center text-center cursor-none ${d ? 'liquid-glass' : 'bg-white shadow-md shadow-pink-accent/5 border border-pink-accent/10'}`}>
+              <motion.div key={label} whileHover={{ scale: 1.04, y: -4 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                className={`rounded-2xl p-4 md:p-5 flex flex-col items-center text-center cursor-none transition-shadow duration-300 ${d ? 'liquid-glass hover:shadow-[0_0_30px_rgba(255,45,120,0.1)]' : 'bg-white shadow-md shadow-pink-accent/5 border border-pink-accent/10 hover:shadow-lg hover:shadow-pink-accent/10 hover:border-pink-accent/20'}`}>
                 <Icon className="h-7 w-7 md:h-8 md:w-8 text-pink-accent mb-2.5" />
                 <h4 className={`font-body font-semibold text-xs md:text-sm ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>{label}</h4>
                 <p className={`font-body font-light text-[10px] md:text-xs mt-1 ${d ? 'text-white/40' : 'text-[#1a1a1a]/40'}`}>{desc}</p>
-              </div>
+              </motion.div>
             ))}
           </motion.div>
         </div>
@@ -582,7 +594,8 @@ export default function App() {
 
         <div className="grid md:grid-cols-2 gap-4 md:gap-6">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className={`rounded-2xl p-6 md:p-8 ${d ? 'liquid-glass' : 'bg-white shadow-md shadow-pink-accent/5 border border-pink-accent/10'}`}
+            whileHover={{ scale: 1.02, y: -4 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            className={`rounded-2xl p-6 md:p-8 transition-shadow duration-300 cursor-none ${d ? 'liquid-glass hover:shadow-[0_0_30px_rgba(255,45,120,0.1)]' : 'bg-white shadow-md shadow-pink-accent/5 border border-pink-accent/10 hover:shadow-lg hover:shadow-pink-accent/10'}`}
           >
             <div className="flex items-start gap-4">
               <RandIcon className="w-12 h-12 md:w-14 md:h-14 flex-shrink-0" isDark={d} />
@@ -596,7 +609,8 @@ export default function App() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.15 }}
-            className={`rounded-2xl p-6 md:p-8 ${d ? 'liquid-glass' : 'bg-white shadow-md shadow-pink-accent/5 border border-pink-accent/10'}`}
+            whileHover={{ scale: 1.02, y: -4 }}
+            className={`rounded-2xl p-6 md:p-8 transition-shadow duration-300 cursor-none ${d ? 'liquid-glass hover:shadow-[0_0_30px_rgba(255,45,120,0.1)]' : 'bg-white shadow-md shadow-pink-accent/5 border border-pink-accent/10 hover:shadow-lg hover:shadow-pink-accent/10'}`}
           >
             <div className="flex items-start gap-4">
               <BerkeleyIcon className="w-12 h-12 md:w-14 md:h-14 flex-shrink-0" isDark={d} />
@@ -634,7 +648,15 @@ export default function App() {
           </motion.div>
         </div>
 
-        <div className={`mt-12 md:mt-16 pt-6 md:pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-2 text-xs font-body ${d ? 'border-white/5 text-white/25' : 'border-[#1a1a1a]/5 text-[#1a1a1a]/25'}`}>
+        {/* Churchill Quote */}
+        <div className={`mt-12 md:mt-16 pt-8 border-t text-center ${d ? 'border-white/5' : 'border-[#1a1a1a]/5'}`}>
+          <p className={`font-heading italic text-lg md:text-xl max-w-lg mx-auto leading-snug ${d ? 'text-white/25' : 'text-[#1a1a1a]/20'}`}>
+            "Success is not final, failure is not fatal: it is the courage to continue that counts."
+          </p>
+          <p className={`font-body text-xs mt-3 ${d ? 'text-white/15' : 'text-[#1a1a1a]/15'}`}>-- Winston Churchill</p>
+        </div>
+
+        <div className={`mt-8 pt-6 border-t flex flex-col md:flex-row items-center justify-between gap-2 text-xs font-body ${d ? 'border-white/5 text-white/25' : 'border-[#1a1a1a]/5 text-[#1a1a1a]/25'}`}>
           <span className={`font-heading italic text-base ${d ? 'text-white/30' : 'text-[#1a1a1a]/30'}`}>Victoria Elfend</span>
           <span>Washington D.C. | Newport Coast, CA</span>
         </div>
