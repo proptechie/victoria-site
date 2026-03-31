@@ -724,11 +724,13 @@ function HomePage({ isDark: d, onContact, onToggle }: { isDark: boolean; onConta
         </div>
 
         <div className={`mt-8 pt-6 border-t flex flex-col md:flex-row items-center justify-between gap-3 text-xs font-body ${d ? 'border-white/5 text-white/25' : 'border-[#1a1a1a]/5 text-[#1a1a1a]/25'}`}>
-          <span className={`font-heading italic text-base ${d ? 'text-white/30' : 'text-[#1a1a1a]/30'}`}>Victoria Elfend</span>
-          <button onClick={onToggle} className={`flex items-center gap-1.5 text-xs font-body cursor-none px-3 py-1.5 rounded-full transition-colors ${d ? 'text-white/30 hover:text-white/60 bg-white/[0.03] hover:bg-white/[0.06]' : 'text-[#1a1a1a]/30 hover:text-[#1a1a1a]/60 bg-black/[0.02] hover:bg-black/[0.04]'}`}>
-            {d ? <Sun className="h-3 w-3" /> : <Moon className="h-3 w-3" />}
-            {d ? 'Light mode' : 'Dark mode'}
-          </button>
+          <div className="flex flex-col items-center md:items-start gap-1.5">
+            <span className={`font-heading italic text-base ${d ? 'text-white/30' : 'text-[#1a1a1a]/30'}`}>Victoria Elfend</span>
+            <button onClick={onToggle} className={`flex items-center gap-1.5 text-[10px] font-body cursor-none px-2.5 py-1 rounded-full transition-colors ${d ? 'text-white/25 hover:text-white/50 bg-white/[0.03] hover:bg-white/[0.06]' : 'text-[#1a1a1a]/25 hover:text-[#1a1a1a]/50 bg-black/[0.02] hover:bg-black/[0.04]'}`}>
+              {d ? <Sun className="h-2.5 w-2.5" /> : <Moon className="h-2.5 w-2.5" />}
+              {d ? 'Light mode' : 'Dark mode'}
+            </button>
+          </div>
           <span>Washington D.C. | Newport Coast, CA</span>
         </div>
       </section>
