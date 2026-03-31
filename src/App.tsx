@@ -145,49 +145,28 @@ function ExperienceCard({ role, company, location, period, bullets, accent = fal
   )
 }
 
-// ---- Logo Components (inline SVG for reliability) ----
-const logos = [
-  {
-    name: 'Northrop Grumman',
-    svg: (isDark: boolean) => (
-      <svg viewBox="0 0 200 28" className="h-5 md:h-6" fill={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)'}>
-        <text x="0" y="22" fontFamily="'Barlow', sans-serif" fontWeight="600" fontSize="20" letterSpacing="2">NORTHROP GRUMMAN</text>
-      </svg>
-    ),
-  },
-  {
-    name: 'Starburst',
-    svg: (isDark: boolean) => (
-      <svg viewBox="0 0 110 28" className="h-5 md:h-6" fill={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)'}>
-        <text x="0" y="22" fontFamily="'Barlow', sans-serif" fontWeight="600" fontSize="20" letterSpacing="1">STARBURST</text>
-      </svg>
-    ),
-  },
-  {
-    name: 'Pardee RAND',
-    svg: (isDark: boolean) => (
-      <svg viewBox="0 0 140 28" className="h-5 md:h-6" fill={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)'}>
-        <text x="0" y="22" fontFamily="'Barlow', sans-serif" fontWeight="600" fontSize="20" letterSpacing="1">PARDEE RAND</text>
-      </svg>
-    ),
-  },
-  {
-    name: 'UC Berkeley',
-    svg: (isDark: boolean) => (
-      <svg viewBox="0 0 130 28" className="h-5 md:h-6" fill={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)'}>
-        <text x="0" y="22" fontFamily="'Barlow', sans-serif" fontWeight="600" fontSize="20" letterSpacing="1">UC BERKELEY</text>
-      </svg>
-    ),
-  },
-  {
-    name: 'Cosmic Shielding',
-    svg: (isDark: boolean) => (
-      <svg viewBox="0 0 190 28" className="h-5 md:h-6" fill={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)'}>
-        <text x="0" y="22" fontFamily="'Barlow', sans-serif" fontWeight="600" fontSize="20" letterSpacing="1">COSMIC SHIELDING</text>
-      </svg>
-    ),
-  },
-]
+// ---- School Icons ----
+function RandIcon({ className, isDark }: { className?: string; isDark: boolean }) {
+  return (
+    <svg className={className} viewBox="0 0 48 48" fill="none">
+      <rect x="4" y="4" width="40" height="40" rx="8" fill={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'} stroke={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'} strokeWidth="1"/>
+      <text x="24" y="29" textAnchor="middle" fontFamily="'Barlow', sans-serif" fontWeight="700" fontSize="13" fill={isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)'}>RAND</text>
+    </svg>
+  )
+}
+
+function BerkeleyIcon({ className, isDark }: { className?: string; isDark: boolean }) {
+  return (
+    <svg className={className} viewBox="0 0 48 48" fill="none">
+      <rect x="4" y="4" width="40" height="40" rx="8" fill={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'} stroke={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'} strokeWidth="1"/>
+      {/* Campanile tower silhouette */}
+      <rect x="22" y="10" width="4" height="24" rx="1" fill={isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.35)'}/>
+      <rect x="19" y="10" width="10" height="4" rx="1" fill={isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.35)'}/>
+      <rect x="17" y="34" width="14" height="3" rx="1" fill={isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.35)'}/>
+      <text x="24" y="44" textAnchor="middle" fontFamily="'Barlow', sans-serif" fontWeight="600" fontSize="6" fill={isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.3)'}>CAL</text>
+    </svg>
+  )
+}
 
 // ---- Theme Hook ----
 function useTheme() {
@@ -301,15 +280,10 @@ export default function App() {
           </motion.div>
         </motion.div>
 
-        {/* Logo Bar */}
-        <div className="relative z-10 flex flex-col items-center gap-4 pb-6 md:pb-8">
+        {/* Bottom tagline */}
+        <div className="relative z-10 flex flex-col items-center pb-8">
           <div className={`rounded-full px-3 py-1 text-[10px] md:text-xs font-medium font-body ${d ? 'liquid-glass text-white/80' : 'bg-white/80 backdrop-blur-md text-[#1a1a1a]/60 shadow-sm'}`}>
             Operating at the intersection of defense, technology, and venture capital
-          </div>
-          <div className="flex items-center gap-5 md:gap-10 overflow-x-auto max-w-full px-5 no-scrollbar">
-            {logos.map(l => (
-              <div key={l.name} className="flex-shrink-0 cursor-none">{l.svg(d)}</div>
-            ))}
           </div>
         </div>
       </section>
@@ -414,20 +388,35 @@ export default function App() {
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-          {[
-            { date: 'May 2026', school: 'Pardee RAND Graduate School', degree: 'M.A., National Security Policy', loc: 'Arlington, VA', note: '' },
-            { date: 'May 2023', school: 'University of California, Berkeley', degree: 'B.A., Political Science', loc: 'Berkeley, CA', note: 'Co-founded NewSpace at Berkeley -- UC Berkeley\'s first student-run space nonprofit. Raised $25K+ in funding, built 15+ industry partnerships (Planet, Redwire, NASA, USRA).' },
-          ].map((edu, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}
-              className={`rounded-2xl p-6 md:p-8 ${d ? 'liquid-glass' : 'bg-white shadow-md shadow-pink-accent/5 border border-pink-accent/10'}`}
-            >
-              <div className="text-pink-accent text-xs font-body font-semibold mb-1.5">{edu.date}</div>
-              <h3 className={`text-xl md:text-2xl font-heading italic ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>{edu.school}</h3>
-              <p className={`font-body mt-1 text-sm ${d ? 'text-white/60' : 'text-[#1a1a1a]/55'}`}>{edu.degree}</p>
-              {edu.note && <p className={`font-body font-light text-xs md:text-sm mt-3 leading-relaxed ${d ? 'text-white/40' : 'text-[#1a1a1a]/40'}`}>{edu.note}</p>}
-              {!edu.note && <p className={`font-body font-light text-xs mt-3 ${d ? 'text-white/40' : 'text-[#1a1a1a]/40'}`}>{edu.loc}</p>}
-            </motion.div>
-          ))}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className={`rounded-2xl p-6 md:p-8 ${d ? 'liquid-glass' : 'bg-white shadow-md shadow-pink-accent/5 border border-pink-accent/10'}`}
+          >
+            <div className="flex items-start gap-4">
+              <RandIcon className="w-12 h-12 md:w-14 md:h-14 flex-shrink-0" isDark={d} />
+              <div>
+                <div className="text-pink-accent text-xs font-body font-semibold mb-1.5">May 2026</div>
+                <h3 className={`text-xl md:text-2xl font-heading italic ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>Pardee RAND Graduate School</h3>
+                <p className={`font-body mt-1 text-sm ${d ? 'text-white/60' : 'text-[#1a1a1a]/55'}`}>M.A., National Security Policy</p>
+                <p className={`font-body font-light text-xs mt-3 ${d ? 'text-white/40' : 'text-[#1a1a1a]/40'}`}>Arlington, VA</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.15 }}
+            className={`rounded-2xl p-6 md:p-8 ${d ? 'liquid-glass' : 'bg-white shadow-md shadow-pink-accent/5 border border-pink-accent/10'}`}
+          >
+            <div className="flex items-start gap-4">
+              <BerkeleyIcon className="w-12 h-12 md:w-14 md:h-14 flex-shrink-0" isDark={d} />
+              <div>
+                <div className="text-pink-accent text-xs font-body font-semibold mb-1.5">May 2023</div>
+                <h3 className={`text-xl md:text-2xl font-heading italic ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>University of California, Berkeley</h3>
+                <p className={`font-body mt-1 text-sm ${d ? 'text-white/60' : 'text-[#1a1a1a]/55'}`}>B.A., Political Science</p>
+                <p className={`font-body font-light text-xs md:text-sm mt-3 leading-relaxed ${d ? 'text-white/40' : 'text-[#1a1a1a]/40'}`}>
+                  Co-founded NewSpace at Berkeley -- UC Berkeley's first student-run space nonprofit. Raised $25K+ in funding, built 15+ industry partnerships (Planet, Redwire, NASA, USRA).
+                </p>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
