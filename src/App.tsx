@@ -292,11 +292,89 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
   )
 }
 
+// ---- Contact Modal ----
+function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () => void; isDark: boolean }) {
+  const [sent, setSent] = useState(false)
+
+  if (!open) return null
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[9990] flex items-center justify-center px-5"
+      onClick={onClose}
+    >
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+        onClick={e => e.stopPropagation()}
+        className={`relative z-10 w-full max-w-md rounded-2xl p-6 md:p-8 ${isDark ? 'bg-[#111] border border-white/10' : 'bg-white border border-[#1a1a1a]/10 shadow-2xl'}`}
+      >
+        <button onClick={onClose} className={`absolute top-4 right-4 p-1 rounded-full transition-colors cursor-none ${isDark ? 'text-white/40 hover:text-white' : 'text-[#1a1a1a]/40 hover:text-[#1a1a1a]'}`}>
+          <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+
+        {!sent ? (
+          <>
+            <h3 className={`text-2xl font-heading italic mb-1 ${isDark ? 'text-white' : 'text-[#1a1a1a]'}`}>Get in Touch</h3>
+            <p className={`text-sm font-body font-light mb-6 ${isDark ? 'text-white/50' : 'text-[#1a1a1a]/50'}`}>Send Victoria a message</p>
+
+            <form onSubmit={e => { e.preventDefault(); setSent(true) }} className="space-y-4">
+              <div>
+                <label className={`block text-xs font-body font-medium mb-1.5 ${isDark ? 'text-white/60' : 'text-[#1a1a1a]/60'}`}>Name</label>
+                <input required type="text" placeholder="Your name"
+                  className={`w-full rounded-xl px-4 py-2.5 text-sm font-body outline-none transition-colors ${isDark ? 'bg-white/[0.04] border border-white/10 text-white placeholder-white/30 focus:border-pink-accent/50' : 'bg-[#faf7f5] border border-[#1a1a1a]/10 text-[#1a1a1a] placeholder-[#1a1a1a]/30 focus:border-pink-accent/50'}`}
+                />
+              </div>
+              <div>
+                <label className={`block text-xs font-body font-medium mb-1.5 ${isDark ? 'text-white/60' : 'text-[#1a1a1a]/60'}`}>Email</label>
+                <input required type="email" placeholder="your@email.com"
+                  className={`w-full rounded-xl px-4 py-2.5 text-sm font-body outline-none transition-colors ${isDark ? 'bg-white/[0.04] border border-white/10 text-white placeholder-white/30 focus:border-pink-accent/50' : 'bg-[#faf7f5] border border-[#1a1a1a]/10 text-[#1a1a1a] placeholder-[#1a1a1a]/30 focus:border-pink-accent/50'}`}
+                />
+              </div>
+              <div>
+                <label className={`block text-xs font-body font-medium mb-1.5 ${isDark ? 'text-white/60' : 'text-[#1a1a1a]/60'}`}>Message</label>
+                <textarea required rows={4} placeholder="What would you like to discuss?"
+                  className={`w-full rounded-xl px-4 py-2.5 text-sm font-body outline-none resize-none transition-colors ${isDark ? 'bg-white/[0.04] border border-white/10 text-white placeholder-white/30 focus:border-pink-accent/50' : 'bg-[#faf7f5] border border-[#1a1a1a]/10 text-[#1a1a1a] placeholder-[#1a1a1a]/30 focus:border-pink-accent/50'}`}
+                />
+              </div>
+              <button type="submit" className="w-full bg-pink-accent text-white rounded-xl px-5 py-3 text-sm font-medium font-body flex items-center justify-center gap-2 hover:bg-pink-soft transition-colors cursor-none">
+                Send Message <ArrowUpRight className="h-4 w-4" />
+              </button>
+            </form>
+
+            <div className="flex items-center gap-3 mt-5 pt-5 border-t border-current/5">
+              <a href="mailto:victoriapelfend@gmail.com" className={`flex items-center gap-1.5 text-xs font-body hover:text-pink-accent transition-colors cursor-none ${isDark ? 'text-white/40' : 'text-[#1a1a1a]/40'}`}>
+                <Mail className="h-3 w-3" /> victoriapelfend@gmail.com
+              </a>
+              <a href="https://linkedin.com/in/victoria-elfend" target="_blank" className={`flex items-center gap-1.5 text-xs font-body hover:text-pink-accent transition-colors cursor-none ${isDark ? 'text-white/40' : 'text-[#1a1a1a]/40'}`}>
+                <LinkedinIcon className="h-3 w-3" /> LinkedIn
+              </a>
+            </div>
+          </>
+        ) : (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-8">
+            <div className="text-4xl mb-4">&#10003;</div>
+            <h3 className={`text-2xl font-heading italic mb-2 ${isDark ? 'text-white' : 'text-[#1a1a1a]'}`}>Message Sent</h3>
+            <p className={`text-sm font-body font-light ${isDark ? 'text-white/50' : 'text-[#1a1a1a]/50'}`}>Victoria will be in touch soon.</p>
+            <button onClick={onClose} className="mt-6 bg-pink-accent text-white rounded-xl px-6 py-2.5 text-sm font-medium font-body hover:bg-pink-soft transition-colors cursor-none">
+              Close
+            </button>
+          </motion.div>
+        )}
+      </motion.div>
+    </motion.div>
+  )
+}
+
 // ============================================================
 // MAIN APP
 // ============================================================
 export default function App() {
   const [authed, setAuthed] = useState(() => sessionStorage.getItem('ve-auth') === '1')
+  const [contactOpen, setContactOpen] = useState(false)
   const heroRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
@@ -310,6 +388,7 @@ export default function App() {
     <div className={`min-h-screen overflow-x-hidden transition-colors duration-500 cursor-none ${d ? 'bg-[#0a0a0a] text-white' : 'bg-[#faf7f5] text-[#1a1a1a]'}`}>
 
       <B2Cursor />
+      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} isDark={d} />
 
       {/* ===== NAVBAR ===== */}
       <nav className="fixed top-4 left-0 right-0 z-50 px-5 md:px-12">
@@ -325,18 +404,18 @@ export default function App() {
             <button onClick={toggle} className={`p-2 rounded-full transition-colors cursor-none ${d ? 'text-white/60 hover:text-white' : 'text-[#1a1a1a]/50 hover:text-[#1a1a1a]'}`}>
               {d ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
-            <a href="mailto:victoriapelfend@gmail.com" className="bg-pink-accent text-white rounded-full px-4 py-1.5 text-sm font-medium font-body flex items-center gap-1.5 hover:bg-pink-soft transition-colors cursor-none">
+            <button onClick={() => setContactOpen(true)} className="bg-pink-accent text-white rounded-full px-4 py-1.5 text-sm font-medium font-body flex items-center gap-1.5 hover:bg-pink-soft transition-colors cursor-none">
               Get in Touch <ArrowUpRight className="h-3.5 w-3.5" />
-            </a>
+            </button>
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
             <button onClick={toggle} className={`p-2 cursor-none ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>
               {d ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
-            <a href="mailto:victoriapelfend@gmail.com" className="bg-pink-accent text-white rounded-full px-3 py-1.5 text-xs font-medium font-body cursor-none">
+            <button onClick={() => setContactOpen(true)} className="bg-pink-accent text-white rounded-full px-3 py-1.5 text-xs font-medium font-body cursor-none">
               Contact
-            </a>
+            </button>
           </div>
         </div>
       </nav>
@@ -385,9 +464,9 @@ export default function App() {
             transition={{ duration: 0.6, delay: 1.1 }}
             className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5 mt-8"
           >
-            <a href="mailto:victoriapelfend@gmail.com" className={`rounded-full px-5 py-2.5 text-sm font-medium font-body flex items-center gap-2 transition-all cursor-none ${d ? 'liquid-glass-strong text-white hover:bg-pink-accent/20' : 'bg-pink-accent text-white hover:bg-pink-soft shadow-lg shadow-pink-accent/20'}`}>
+            <button onClick={() => setContactOpen(true)} className={`rounded-full px-5 py-2.5 text-sm font-medium font-body flex items-center gap-2 transition-all cursor-none ${d ? 'liquid-glass-strong text-white hover:bg-pink-accent/20' : 'bg-pink-accent text-white hover:bg-pink-soft shadow-lg shadow-pink-accent/20'}`}>
               Connect with Victoria <ArrowUpRight className="h-4 w-4" />
-            </a>
+            </button>
             <a href="#experience" className={`text-sm font-medium font-body flex items-center gap-1.5 transition-colors cursor-none ${d ? 'text-white/60 hover:text-white' : 'text-[#1a1a1a]/50 hover:text-[#1a1a1a]'}`}>
               View Experience <ChevronDown className="h-4 w-4" />
             </a>
@@ -545,9 +624,9 @@ export default function App() {
               I think in data models, build frameworks quickly, and execute at the pace the problem demands. Ready to move on day one.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a href="mailto:victoriapelfend@gmail.com" className={`rounded-full px-6 py-3 text-sm font-medium font-body flex items-center gap-2 transition-all cursor-none ${d ? 'liquid-glass-strong text-white hover:bg-pink-accent/20' : 'bg-pink-accent text-white hover:bg-pink-soft shadow-lg shadow-pink-accent/20'}`}>
-                <Mail className="h-4 w-4" /> victoriapelfend@gmail.com
-              </a>
+              <button onClick={() => setContactOpen(true)} className={`rounded-full px-6 py-3 text-sm font-medium font-body flex items-center gap-2 transition-all cursor-none ${d ? 'liquid-glass-strong text-white hover:bg-pink-accent/20' : 'bg-pink-accent text-white hover:bg-pink-soft shadow-lg shadow-pink-accent/20'}`}>
+                <Mail className="h-4 w-4" /> Get in Touch
+              </button>
               <a href="https://linkedin.com/in/victoria-elfend" target="_blank" className={`rounded-full px-5 py-3 text-sm font-medium font-body flex items-center gap-2 transition-all cursor-none ${d ? 'liquid-glass text-white hover:bg-white/5' : 'bg-white border border-[#1a1a1a]/10 text-[#1a1a1a] hover:border-pink-accent/30 shadow-sm'}`}>
                 <LinkedinIcon className="h-4 w-4" /> LinkedIn
               </a>
