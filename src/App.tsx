@@ -250,10 +250,11 @@ function useTheme() {
   return { mode, toggle: () => setMode(m => m === 'dark' ? 'light' : 'dark') }
 }
 
-// ---- Password Gate ----
+// ---- Password Gate with Rocket Launch Transition ----
 function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
   const [pw, setPw] = useState('')
   const [error, setError] = useState(false)
+  const [launching, setLaunching] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => { inputRef.current?.focus() }, [])
@@ -262,7 +263,8 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
     e.preventDefault()
     if (pw.toLowerCase() === 'victoria') {
       sessionStorage.setItem('ve-auth', '1')
-      onUnlock()
+      setLaunching(true)
+      setTimeout(() => onUnlock(), 2400)
     } else {
       setError(true)
       setPw('')
@@ -271,32 +273,70 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
   }
 
   return (
-    <div className="fixed inset-0 z-[99999] bg-[#0a0a0a] flex items-center justify-center px-5">
+    <div className="fixed inset-0 z-[99999] bg-[#faf7f5] flex items-center justify-center px-5 overflow-hidden">
+      {/* Stars that appear during launch */}
+      {launching && (
+        <div className="absolute inset-0 z-0">
+          {Array.from({ length: 60 }).map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-0.5 h-8 bg-pink-accent/30 rounded-full"
+              style={{ left: `${Math.random() * 100}%`, top: `-${Math.random() * 20}%` }}
+              initial={{ y: '-20vh', opacity: 0 }}
+              animate={{ y: '120vh', opacity: [0, 0.8, 0] }}
+              transition={{ duration: 0.6 + Math.random() * 0.4, delay: 0.3 + Math.random() * 0.8, ease: 'easeIn' }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Screen shake + zoom during launch */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-center max-w-sm w-full"
+        animate={launching ? {
+          scale: [1, 1.02, 1.01, 1.03, 0.3],
+          y: [0, -5, 3, -8, -800],
+          opacity: [1, 1, 1, 1, 0],
+          filter: ['blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(8px)'],
+        } : {}}
+        transition={launching ? { duration: 2.2, times: [0, 0.15, 0.3, 0.5, 1], ease: 'easeIn' } : {}}
+        className="text-center max-w-sm w-full relative z-10"
       >
-        <h1 className="font-heading italic text-5xl md:text-6xl text-white mb-3">VE</h1>
-        <p className="text-white/40 font-body font-light text-sm mb-8">Enter password to continue</p>
-        <form onSubmit={submit} className="flex flex-col items-center gap-4">
-          <motion.input
-            ref={inputRef}
-            type="password"
-            value={pw}
-            onChange={e => setPw(e.target.value)}
-            placeholder="Password"
-            animate={error ? { x: [0, -10, 10, -10, 10, 0] } : {}}
-            transition={{ duration: 0.4 }}
-            className={`w-full max-w-xs bg-white/[0.04] border rounded-full px-5 py-3 text-sm font-body text-white text-center placeholder-white/30 outline-none focus:border-pink-accent/50 transition-colors ${error ? 'border-red-500/50' : 'border-white/10'}`}
-          />
-          <button type="submit" className="liquid-glass-strong rounded-full px-8 py-2.5 text-sm font-medium text-white font-body flex items-center gap-2 hover:bg-pink-accent/20 transition-all">
-            Enter <ArrowUpRight className="h-4 w-4" />
-          </button>
-        </form>
-        {error && <p className="text-red-400/70 text-xs font-body mt-4">Incorrect password</p>}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1 className="font-heading italic text-5xl md:text-6xl text-[#1a1a1a] mb-3">VE</h1>
+          <p className="text-[#1a1a1a]/40 font-body font-light text-sm mb-8">Enter password to continue</p>
+          <form onSubmit={submit} className="flex flex-col items-center gap-4">
+            <motion.input
+              ref={inputRef}
+              type="password"
+              value={pw}
+              onChange={e => setPw(e.target.value)}
+              placeholder="Password"
+              animate={error ? { x: [0, -10, 10, -10, 10, 0] } : {}}
+              transition={{ duration: 0.4 }}
+              className={`w-full max-w-xs bg-[#1a1a1a]/[0.03] border rounded-full px-5 py-3 text-sm font-body text-[#1a1a1a] text-center placeholder-[#1a1a1a]/30 outline-none focus:border-pink-accent/50 transition-colors ${error ? 'border-red-500/30' : 'border-[#1a1a1a]/10'}`}
+            />
+            <button type="submit" className="bg-pink-accent text-white rounded-full px-8 py-2.5 text-sm font-medium font-body flex items-center gap-2 hover:bg-pink-soft transition-all shadow-lg shadow-pink-accent/20">
+              {launching ? 'Launching...' : 'Enter'} <ArrowUpRight className="h-4 w-4" />
+            </button>
+          </form>
+          {error && <p className="text-red-400/70 text-xs font-body mt-4">Incorrect password</p>}
+        </motion.div>
       </motion.div>
+
+      {/* Rocket exhaust glow at bottom during launch */}
+      {launching && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: [0, 0.6, 1, 0], scale: [0.5, 2, 4, 6] }}
+          transition={{ duration: 2, ease: 'easeOut' }}
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(255,45,120,0.3) 0%, rgba(255,107,157,0.1) 40%, transparent 70%)' }}
+        />
+      )}
     </div>
   )
 }
