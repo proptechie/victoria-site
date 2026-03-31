@@ -324,8 +324,15 @@ function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () =>
 
         {!sent ? (
           <>
-            <h3 className={`text-2xl font-heading italic mb-1 ${isDark ? 'text-white' : 'text-[#1a1a1a]'}`}>Get in Touch</h3>
-            <p className={`text-sm font-body font-light mb-6 ${isDark ? 'text-white/50' : 'text-[#1a1a1a]/50'}`}>Send Victoria a message</p>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-pink-accent/30 flex-shrink-0">
+                <img src="/headshot.jpg" alt="Victoria Elfend" className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <h3 className={`text-xl font-heading italic ${isDark ? 'text-white' : 'text-[#1a1a1a]'}`}>Get in Touch</h3>
+                <p className={`text-xs font-body font-light ${isDark ? 'text-white/50' : 'text-[#1a1a1a]/50'}`}>Send Victoria a message</p>
+              </div>
+            </div>
 
             <form onSubmit={e => { e.preventDefault(); setSent(true) }} className="space-y-4">
               <div>
@@ -637,14 +644,9 @@ export default function App() {
             <p className={`font-body font-light mb-8 max-w-xl mx-auto text-sm md:text-base ${d ? 'text-white/50' : 'text-[#1a1a1a]/45'}`}>
               I think in data models, build frameworks quickly, and execute at the pace the problem demands. Ready to move on day one.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <button onClick={() => setContactOpen(true)} className={`rounded-full px-6 py-3 text-sm font-medium font-body flex items-center gap-2 transition-all cursor-none ${d ? 'liquid-glass-strong text-white hover:bg-pink-accent/20' : 'bg-pink-accent text-white hover:bg-pink-soft shadow-lg shadow-pink-accent/20'}`}>
-                <Mail className="h-4 w-4" /> Get in Touch
-              </button>
-              <a href="https://linkedin.com/in/victoria-elfend" target="_blank" className={`rounded-full px-5 py-3 text-sm font-medium font-body flex items-center gap-2 transition-all cursor-none ${d ? 'liquid-glass text-white hover:bg-white/5' : 'bg-white border border-[#1a1a1a]/10 text-[#1a1a1a] hover:border-pink-accent/30 shadow-sm'}`}>
-                <LinkedinIcon className="h-4 w-4" /> LinkedIn
-              </a>
-            </div>
+            <button onClick={() => setContactOpen(true)} className={`rounded-full px-8 py-3 text-sm font-medium font-body flex items-center gap-2 transition-all cursor-none mx-auto ${d ? 'liquid-glass-strong text-white hover:bg-pink-accent/20' : 'bg-pink-accent text-white hover:bg-pink-soft shadow-lg shadow-pink-accent/20'}`}>
+              Get in Touch <ArrowUpRight className="h-4 w-4" />
+            </button>
           </motion.div>
         </div>
 
