@@ -728,7 +728,7 @@ function HomePage({ isDark: d, onContact, onToggle }: { isDark: boolean; onConta
             <span className={`font-heading italic text-base ${d ? 'text-white/30' : 'text-[#1a1a1a]/30'}`}>Victoria Elfend</span>
             <button onClick={onToggle} className={`flex items-center gap-1.5 text-[10px] font-body cursor-none px-2.5 py-1 rounded-full transition-colors ${d ? 'text-white/25 hover:text-white/50 bg-white/[0.03] hover:bg-white/[0.06]' : 'text-[#1a1a1a]/25 hover:text-[#1a1a1a]/50 bg-black/[0.02] hover:bg-black/[0.04]'}`}>
               {d ? <Sun className="h-2.5 w-2.5" /> : <Moon className="h-2.5 w-2.5" />}
-              {d ? 'Light mode' : 'Dark mode'}
+              {d ? 'Dark mode' : 'Light mode'}
             </button>
           </div>
           <span>Washington D.C. | Newport Coast, CA</span>

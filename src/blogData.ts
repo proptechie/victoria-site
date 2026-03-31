@@ -13,7 +13,7 @@ export const posts: BlogPost[] = [
     slug: 'proliferated-leo-resilience',
     title: 'Proliferated LEO and the Future of Space Resilience',
     date: 'March 2026',
-    readTime: '16 min read',
+    readTime: '7 min read',
     category: 'Emerging Technology',
     excerpt: 'BOTTOM LINE UP FRONT (BLUF): Many decision-makers still think of space as a handful of “Rolls-Royces”: exquisite satellites, few in number, slow to replace, and therefore strategically fragile. That m...',
     body: [
@@ -39,7 +39,7 @@ export const posts: BlogPost[] = [
     slug: 'commercial-space-mission-authorization',
     title: 'Mission Authorization for Commercial Space: A Policy Framework',
     date: 'February 2026',
-    readTime: '31 min read',
+    readTime: '12 min read',
     category: 'Space Policy',
     excerpt: 'The U.S. is facing a fast changing commercial landscape and intensifying geopolitical competition in space. The Trump Administration, through an August 2025 Executive Order has set increasing American...',
     body: [
@@ -80,7 +80,7 @@ export const posts: BlogPost[] = [
     slug: 'prototype-to-program-of-record',
     title: 'Prototype to Program of Record: The Arsenal of Freedom Reforms',
     date: 'March 2026',
-    readTime: '59 min read',
+    readTime: '18 min read',
     category: 'Defense Acquisition',
     excerpt: 'In November 2025, Secretary of Defense Pete Hegseth announced the Arsenal of Freedom (AOF) at the National War College, formally declaring the Defense Acquisition System (DAS) defunct and introducing ...',
     body: [
