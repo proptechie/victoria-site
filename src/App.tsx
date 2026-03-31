@@ -11,6 +11,64 @@ function LinkedinIcon({ className }: { className?: string }) {
   )
 }
 
+// ---- Smoke Particle ----
+type SmokeParticle = { id: number; x: number; y: number; born: number }
+
+function SmokeTrail() {
+  const [particles, setParticles] = useState<SmokeParticle[]>([])
+  const lastPos = useRef({ x: 0, y: 0 })
+  const idRef = useRef(0)
+
+  useEffect(() => {
+    let distAccum = 0
+    const move = (e: MouseEvent) => {
+      const dx = e.clientX - lastPos.current.x
+      const dy = e.clientY - lastPos.current.y
+      distAccum += Math.sqrt(dx * dx + dy * dy)
+      lastPos.current = { x: e.clientX, y: e.clientY }
+
+      // Spawn a particle every ~12px of movement
+      if (distAccum > 12) {
+        distAccum = 0
+        const p: SmokeParticle = { id: idRef.current++, x: e.clientX, y: e.clientY, born: Date.now() }
+        setParticles(prev => [...prev, p])
+      }
+    }
+    window.addEventListener('mousemove', move)
+    return () => window.removeEventListener('mousemove', move)
+  }, [])
+
+  // Cleanup old particles every 200ms
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setParticles(prev => prev.filter(p => Date.now() - p.born < 2000))
+    }, 200)
+    return () => clearInterval(interval)
+  }, [])
+
+  if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) return null
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-[9998]">
+      {particles.map(p => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full"
+          initial={{ x: p.x - 6, y: p.y - 6, scale: 0.3, opacity: 0.4 }}
+          animate={{ scale: 2.5, opacity: 0, y: p.y - 6 + 20 }}
+          transition={{ duration: 2, ease: 'easeOut' }}
+          style={{
+            width: 12,
+            height: 12,
+            background: 'radial-gradient(circle, rgba(180,180,190,0.5) 0%, rgba(140,140,150,0.15) 50%, transparent 70%)',
+            filter: 'blur(3px)',
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
 // ---- B2 Bomber Cursor ----
 function B2Cursor() {
   const mouseX = useMotionValue(-100)
@@ -34,24 +92,26 @@ function B2Cursor() {
     }
   }, [mouseX, mouseY])
 
-  // Only show on desktop (no hover = touch device)
   if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) return null
 
   return (
-    <motion.img
-      src="/b2-medium.png"
-      alt=""
-      className="fixed pointer-events-none z-[9999]"
-      style={{
-        x: springX,
-        y: springY,
-        translateX: '-50%',
-        translateY: '-50%',
-        opacity: visible ? 0.85 : 0,
-        width: 56,
-        height: 56,
-      }}
-    />
+    <>
+      <SmokeTrail />
+      <motion.img
+        src="/b2-medium.png"
+        alt=""
+        className="fixed pointer-events-none z-[9999]"
+        style={{
+          x: springX,
+          y: springY,
+          translateX: '-50%',
+          translateY: '-50%',
+          opacity: visible ? 0.85 : 0,
+          width: 56,
+          height: 56,
+        }}
+      />
+    </>
   )
 }
 
