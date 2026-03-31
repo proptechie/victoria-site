@@ -241,16 +241,70 @@ function useTheme() {
   return { mode, toggle: () => setMode(m => m === 'dark' ? 'light' : 'dark') }
 }
 
+// ---- Password Gate ----
+function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
+  const [pw, setPw] = useState('')
+  const [error, setError] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => { inputRef.current?.focus() }, [])
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (pw.toLowerCase() === 'victoria') {
+      sessionStorage.setItem('ve-auth', '1')
+      onUnlock()
+    } else {
+      setError(true)
+      setPw('')
+      setTimeout(() => setError(false), 1500)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-[99999] bg-[#0a0a0a] flex items-center justify-center px-5">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-center max-w-sm w-full"
+      >
+        <h1 className="font-heading italic text-5xl md:text-6xl text-white mb-3">VE</h1>
+        <p className="text-white/40 font-body font-light text-sm mb-8">Enter password to continue</p>
+        <form onSubmit={submit} className="flex flex-col items-center gap-4">
+          <motion.input
+            ref={inputRef}
+            type="password"
+            value={pw}
+            onChange={e => setPw(e.target.value)}
+            placeholder="Password"
+            animate={error ? { x: [0, -10, 10, -10, 10, 0] } : {}}
+            transition={{ duration: 0.4 }}
+            className={`w-full max-w-xs bg-white/[0.04] border rounded-full px-5 py-3 text-sm font-body text-white text-center placeholder-white/30 outline-none focus:border-pink-accent/50 transition-colors ${error ? 'border-red-500/50' : 'border-white/10'}`}
+          />
+          <button type="submit" className="liquid-glass-strong rounded-full px-8 py-2.5 text-sm font-medium text-white font-body flex items-center gap-2 hover:bg-pink-accent/20 transition-all">
+            Enter <ArrowUpRight className="h-4 w-4" />
+          </button>
+        </form>
+        {error && <p className="text-red-400/70 text-xs font-body mt-4">Incorrect password</p>}
+      </motion.div>
+    </div>
+  )
+}
+
 // ============================================================
 // MAIN APP
 // ============================================================
 export default function App() {
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem('ve-auth') === '1')
   const heroRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1])
   const { mode, toggle } = useTheme()
   const d = mode === 'dark' // shorthand
+
+  if (!authed) return <PasswordGate onUnlock={() => setAuthed(true)} />
 
   return (
     <div className={`min-h-screen overflow-x-hidden transition-colors duration-500 cursor-none ${d ? 'bg-[#0a0a0a] text-white' : 'bg-[#faf7f5] text-[#1a1a1a]'}`}>
