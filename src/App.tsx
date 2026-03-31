@@ -206,7 +206,7 @@ export default function App() {
             initial={{ filter: 'blur(10px)', opacity: 0, y: 20 }}
             animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1.1 }}
-            className="flex items-center gap-6 mt-6"
+            className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mt-6"
           >
             <a href="mailto:victoriapelfend@gmail.com" className="liquid-glass-strong rounded-full px-6 py-3 text-sm font-medium text-white font-body flex items-center gap-2 hover:bg-pink-accent/20 transition-all">
               Connect with Victoria <ArrowUpRight className="h-5 w-5" />
@@ -222,9 +222,9 @@ export default function App() {
           <div className={`rounded-full px-3.5 py-1 text-xs font-medium font-body ${isDark ? 'liquid-glass text-white' : 'bg-white/80 backdrop-blur-md text-[#1a1a1a] shadow-sm'}`}>
             Operating at the intersection of defense, technology, and venture capital
           </div>
-          <div className="flex items-center gap-8 md:gap-14">
+          <div className="flex items-center gap-6 md:gap-14 overflow-x-auto max-w-full px-4 no-scrollbar">
             {['Northrop Grumman', 'Starburst', 'Pardee RAND', 'UC Berkeley', 'Cosmic Shielding'].map(name => (
-              <span key={name} className={`text-lg md:text-2xl font-heading italic tracking-tight whitespace-nowrap ${isDark ? 'text-white/70' : 'text-[#1a1a1a]/50'}`}>
+              <span key={name} className={`text-base md:text-2xl font-heading italic tracking-tight whitespace-nowrap flex-shrink-0 ${isDark ? 'text-white/70' : 'text-[#1a1a1a]/50'}`}>
                 {name}
               </span>
             ))}
@@ -418,7 +418,7 @@ export default function App() {
             <p className="opacity-60 font-body font-light mb-8 max-w-xl mx-auto">
               I think in data models, build frameworks quickly, and execute at the pace the problem demands. Ready to move on day one.
             </p>
-            <div className="flex items-center justify-center gap-4 flex-wrap">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a href="mailto:victoriapelfend@gmail.com" className={`rounded-full px-8 py-3.5 text-sm font-medium font-body flex items-center gap-2 transition-all ${isDark ? 'liquid-glass-strong text-white hover:bg-pink-accent/20' : 'bg-pink-accent text-white hover:bg-pink-soft shadow-lg shadow-pink-accent/20'}`}>
                 <Mail className="h-4 w-4" /> victoriapelfend@gmail.com
               </a>
