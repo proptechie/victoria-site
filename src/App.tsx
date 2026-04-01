@@ -344,6 +344,7 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
 // ---- Contact Modal ----
 function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () => void; isDark: boolean }) {
   const [sent, setSent] = useState(false)
+  const [closing, setClosing] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
@@ -356,23 +357,65 @@ function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () =>
     setSent(true)
   }
 
+  const handleClose = () => {
+    setClosing(true)
+    setTimeout(() => {
+      setClosing(false)
+      setSent(false)
+      setName('')
+      setEmail('')
+      setMessage('')
+      onClose()
+    }, 600)
+  }
+
   if (!open) return null
 
   return (
     <motion.div
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: closing ? 0 : 1 }}
+      transition={{ duration: closing ? 0.5 : 0.2 }}
       className="fixed inset-0 z-[9990] flex items-center justify-center px-5"
-      onClick={onClose}
+      onClick={handleClose}
     >
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+
+      {/* Smoke particles on close */}
+      {closing && Array.from({ length: 30 }).map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full z-20"
+          style={{
+            left: `${40 + Math.random() * 20}%`,
+            top: `${40 + Math.random() * 20}%`,
+            width: 8 + Math.random() * 16,
+            height: 8 + Math.random() * 16,
+            background: `radial-gradient(circle, ${isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.15)'} 0%, transparent 70%)`,
+            filter: 'blur(4px)',
+          }}
+          initial={{ scale: 0.5, opacity: 0.8, x: 0, y: 0 }}
+          animate={{
+            scale: [0.5, 2, 3],
+            opacity: [0.8, 0.3, 0],
+            x: (Math.random() - 0.5) * 300,
+            y: (Math.random() - 0.5) * 300,
+          }}
+          transition={{ duration: 0.6, ease: 'easeOut', delay: Math.random() * 0.15 }}
+        />
+      ))}
+
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.3, ease: 'easeOut' }}
+        animate={closing
+          ? { opacity: 0, scale: 0.8, filter: 'blur(10px)' }
+          : { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }
+        }
+        transition={{ duration: closing ? 0.4 : 0.3, ease: 'easeOut' }}
         onClick={e => e.stopPropagation()}
         className={`relative z-10 w-full max-w-md rounded-2xl p-6 md:p-8 ${isDark ? 'bg-[#111] border border-white/10' : 'bg-white border border-[#1a1a1a]/10 shadow-2xl'}`}
       >
-        <button onClick={onClose} className={`absolute top-4 right-4 p-1 rounded-full transition-colors cursor-none ${isDark ? 'text-white/40 hover:text-white' : 'text-[#1a1a1a]/40 hover:text-[#1a1a1a]'}`}>
+        <button onClick={handleClose} className={`absolute top-4 right-4 p-1 rounded-full transition-colors cursor-none ${isDark ? 'text-white/40 hover:text-white' : 'text-[#1a1a1a]/40 hover:text-[#1a1a1a]'}`}>
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
 
@@ -422,13 +465,22 @@ function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () =>
             </div>
           </>
         ) : (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-8">
-            <div className="text-4xl mb-4">&#10003;</div>
-            <h3 className={`text-2xl font-heading italic mb-2 ${isDark ? 'text-white' : 'text-[#1a1a1a]'}`}>Message Sent</h3>
-            <p className={`text-sm font-body font-light ${isDark ? 'text-white/50' : 'text-[#1a1a1a]/50'}`}>Victoria will be in touch soon.</p>
-            <button onClick={onClose} className="mt-6 bg-pink-accent text-white rounded-xl px-6 py-2.5 text-sm font-medium font-body hover:bg-pink-soft transition-colors cursor-none">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-6">
+            <div className="text-5xl mb-5">&#9992;&#65039;</div>
+            <h3 className={`text-2xl font-heading italic mb-2 ${isDark ? 'text-white' : 'text-[#1a1a1a]'}`}>Redirecting to Email</h3>
+            <p className={`text-sm font-body font-light mb-1 ${isDark ? 'text-white/50' : 'text-[#1a1a1a]/50'}`}>Your email client should be opening with your message to Victoria.</p>
+            <p className={`text-xs font-body font-light ${isDark ? 'text-white/35' : 'text-[#1a1a1a]/35'}`}>If it didn't open, email her directly at victoriapelfend@gmail.com</p>
+
+            <button onClick={handleClose} className="mt-6 bg-pink-accent text-white rounded-xl px-6 py-2.5 text-sm font-medium font-body hover:bg-pink-soft transition-colors cursor-none">
               Close
             </button>
+
+            <div className={`mt-6 pt-5 border-t ${isDark ? 'border-white/5' : 'border-[#1a1a1a]/5'}`}>
+              <p className={`font-heading italic text-sm leading-snug ${isDark ? 'text-white/15' : 'text-[#1a1a1a]/12'}`}>
+                "You have enemies? Good. That means you've stood up for something in your life."
+              </p>
+              <p className={`font-body text-[10px] mt-1.5 ${isDark ? 'text-white/10' : 'text-[#1a1a1a]/8'}`}>-- Winston Churchill</p>
+            </div>
           </motion.div>
         )}
       </motion.div>
@@ -742,7 +794,7 @@ function HomePage({ isDark: d, onContact, onToggle }: { isDark: boolean; onConta
               {d ? 'Dark mode' : 'Light mode'}
             </button>
           </div>
-          <span>Washington D.C. | Newport Coast, CA</span>
+          <span>Newport Coast | San Francisco | Washington D.C.</span>
         </div>
       </section>
     </div>
