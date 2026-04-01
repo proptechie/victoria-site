@@ -344,6 +344,17 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
 // ---- Contact Modal ----
 function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () => void; isDark: boolean }) {
   const [sent, setSent] = useState(false)
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const subject = encodeURIComponent(`Message from ${name}`)
+    const body = encodeURIComponent(`From: ${name} (${email})\n\n${message}`)
+    window.open(`mailto:victoriapelfend@gmail.com?subject=${subject}&body=${body}`, '_blank')
+    setSent(true)
+  }
 
   if (!open) return null
 
@@ -369,7 +380,7 @@ function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () =>
           <>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-pink-accent/30 flex-shrink-0">
-                <img src="/headshot.jpg" alt="Victoria Elfend" className="w-full h-full object-cover" />
+                <img src="/headshot.jpg" alt="Victoria Elfend" className="w-full h-full object-cover object-[50%_20%]" />
               </div>
               <div>
                 <h3 className={`text-xl font-heading italic ${isDark ? 'text-white' : 'text-[#1a1a1a]'}`}>Get in Touch</h3>
@@ -377,22 +388,22 @@ function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () =>
               </div>
             </div>
 
-            <form onSubmit={e => { e.preventDefault(); setSent(true) }} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className={`block text-xs font-body font-medium mb-1.5 ${isDark ? 'text-white/60' : 'text-[#1a1a1a]/60'}`}>Name</label>
-                <input required type="text" placeholder="Your name"
+                <input required type="text" placeholder="Your name" value={name} onChange={e => setName(e.target.value)}
                   className={`w-full rounded-xl px-4 py-2.5 text-sm font-body outline-none transition-colors ${isDark ? 'bg-white/[0.04] border border-white/10 text-white placeholder-white/30 focus:border-pink-accent/50' : 'bg-[#faf7f5] border border-[#1a1a1a]/10 text-[#1a1a1a] placeholder-[#1a1a1a]/30 focus:border-pink-accent/50'}`}
                 />
               </div>
               <div>
                 <label className={`block text-xs font-body font-medium mb-1.5 ${isDark ? 'text-white/60' : 'text-[#1a1a1a]/60'}`}>Email</label>
-                <input required type="email" placeholder="your@email.com"
+                <input required type="email" placeholder="your@email.com" value={email} onChange={e => setEmail(e.target.value)}
                   className={`w-full rounded-xl px-4 py-2.5 text-sm font-body outline-none transition-colors ${isDark ? 'bg-white/[0.04] border border-white/10 text-white placeholder-white/30 focus:border-pink-accent/50' : 'bg-[#faf7f5] border border-[#1a1a1a]/10 text-[#1a1a1a] placeholder-[#1a1a1a]/30 focus:border-pink-accent/50'}`}
                 />
               </div>
               <div>
                 <label className={`block text-xs font-body font-medium mb-1.5 ${isDark ? 'text-white/60' : 'text-[#1a1a1a]/60'}`}>Message</label>
-                <textarea required rows={4} placeholder="What would you like to discuss?"
+                <textarea required rows={4} placeholder="What would you like to discuss?" value={message} onChange={e => setMessage(e.target.value)}
                   className={`w-full rounded-xl px-4 py-2.5 text-sm font-body outline-none resize-none transition-colors ${isDark ? 'bg-white/[0.04] border border-white/10 text-white placeholder-white/30 focus:border-pink-accent/50' : 'bg-[#faf7f5] border border-[#1a1a1a]/10 text-[#1a1a1a] placeholder-[#1a1a1a]/30 focus:border-pink-accent/50'}`}
                 />
               </div>
@@ -561,7 +572,7 @@ function HomePage({ isDark: d, onContact, onToggle }: { isDark: boolean; onConta
             {/* Profile picture + contact buttons */}
             <div className="flex items-center gap-4 mb-8">
               <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-pink-accent/30 flex-shrink-0 ${d ? 'bg-white/5' : 'bg-pink-accent/5'}`}>
-                <img src="/headshot.jpg" alt="Victoria Elfend" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                <img src="/headshot.jpg" alt="Victoria Elfend" className="w-full h-full object-cover object-[50%_20%]" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
               </div>
               <div>
                 <h3 className={`font-body font-semibold text-base ${d ? 'text-white' : 'text-[#1a1a1a]'}`}>Victoria Elfend</h3>
