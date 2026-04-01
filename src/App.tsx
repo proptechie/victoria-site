@@ -375,7 +375,7 @@ function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () =>
       setEmail('')
       setMessage('')
       onClose()
-    }, 600)
+    }, 900)
   }
 
   if (!open) return null
@@ -390,37 +390,46 @@ function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () =>
     >
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
-      {/* Smoke particles on close */}
-      {closing && Array.from({ length: 30 }).map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full z-20"
-          style={{
-            left: `${40 + Math.random() * 20}%`,
-            top: `${40 + Math.random() * 20}%`,
-            width: 8 + Math.random() * 16,
-            height: 8 + Math.random() * 16,
-            background: `radial-gradient(circle, ${isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.15)'} 0%, transparent 70%)`,
-            filter: 'blur(4px)',
-          }}
-          initial={{ scale: 0.5, opacity: 0.8, x: 0, y: 0 }}
-          animate={{
-            scale: [0.5, 2, 3],
-            opacity: [0.8, 0.3, 0],
-            x: (Math.random() - 0.5) * 300,
-            y: (Math.random() - 0.5) * 300,
-          }}
-          transition={{ duration: 0.6, ease: 'easeOut', delay: Math.random() * 0.15 }}
-        />
-      ))}
+      {/* B2-style contrail smoke on close */}
+      {closing && Array.from({ length: 50 }).map((_, i) => {
+        const size = 14 + Math.random() * 22
+        const angle = Math.random() * Math.PI * 2
+        const dist = 80 + Math.random() * 250
+        return (
+          <motion.div
+            key={i}
+            className="absolute rounded-full z-20"
+            style={{
+              left: '50%',
+              top: '50%',
+              width: size,
+              height: size,
+              background: `radial-gradient(circle, ${isDark ? 'rgba(160,160,175,0.8)' : 'rgba(120,120,135,0.5)'} 0%, ${isDark ? 'rgba(140,140,155,0.3)' : 'rgba(100,100,115,0.15)'} 40%, transparent 70%)`,
+              filter: `blur(${3 + Math.random() * 3}px)`,
+            }}
+            initial={{ scale: 0.3, opacity: 0.9, x: 0, y: 0 }}
+            animate={{
+              scale: [0.3, 1.5, 3.5],
+              opacity: [0.9, 0.5, 0],
+              x: Math.cos(angle) * dist,
+              y: Math.sin(angle) * dist + Math.random() * 40,
+            }}
+            transition={{
+              duration: 0.8 + Math.random() * 0.5,
+              ease: 'easeOut',
+              delay: Math.random() * 0.2,
+            }}
+          />
+        )
+      })}
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={closing
-          ? { opacity: 0, scale: 0.8, filter: 'blur(10px)' }
+          ? { opacity: 0, scale: 0.3, filter: 'blur(20px)' }
           : { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }
         }
-        transition={{ duration: closing ? 0.4 : 0.3, ease: 'easeOut' }}
+        transition={{ duration: closing ? 0.6 : 0.3, ease: 'easeOut' }}
         onClick={e => e.stopPropagation()}
         className={`relative z-10 w-full max-w-md rounded-2xl p-6 md:p-8 ${isDark ? 'bg-[#111] border border-white/10' : 'bg-white border border-[#1a1a1a]/10 shadow-2xl'}`}
       >
@@ -475,7 +484,7 @@ function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () =>
           </>
         ) : (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-6">
-            <div className="text-5xl mb-5">&#9992;&#65039;</div>
+            <div className="text-5xl mb-5">&#128640;</div>
             <h3 className={`text-2xl font-heading italic mb-2 ${isDark ? 'text-white' : 'text-[#1a1a1a]'}`}>Redirecting to Email</h3>
             <p className={`text-sm font-body font-light mb-1 ${isDark ? 'text-white/50' : 'text-[#1a1a1a]/50'}`}>Your email client should be opening with your message to Victoria.</p>
             <p className={`text-xs font-body font-light ${isDark ? 'text-white/35' : 'text-[#1a1a1a]/35'}`}>If it didn't open, email her directly at victoriapelfend@gmail.com</p>
@@ -483,13 +492,6 @@ function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () =>
             <button onClick={handleClose} className="mt-6 bg-pink-accent text-white rounded-xl px-6 py-2.5 text-sm font-medium font-body hover:bg-pink-soft transition-colors cursor-none">
               Close
             </button>
-
-            <div className={`mt-6 pt-5 border-t ${isDark ? 'border-white/5' : 'border-[#1a1a1a]/5'}`}>
-              <p className={`font-heading italic text-sm leading-snug ${isDark ? 'text-white/15' : 'text-[#1a1a1a]/12'}`}>
-                "You have enemies? Good. That means you've stood up for something in your life."
-              </p>
-              <p className={`font-body text-[10px] mt-1.5 ${isDark ? 'text-white/10' : 'text-[#1a1a1a]/8'}`}>-- Winston Churchill</p>
-            </div>
           </motion.div>
         )}
       </motion.div>
