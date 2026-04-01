@@ -66,14 +66,14 @@ function SmokeTrail() {
         <motion.div
           key={p.id}
           className="absolute rounded-full"
-          initial={{ x: p.x - 10, y: p.y - 10, scale: 0.4, opacity: 0.7 }}
+          initial={{ x: p.x - 10, y: p.y - 10, scale: 0.4, opacity: 0.5 }}
           animate={{ scale: 3.5, opacity: 0, y: p.y - 10 + 30 }}
           transition={{ duration: 2.5, ease: 'easeOut' }}
           style={{
             width: 20,
             height: 20,
-            background: 'radial-gradient(circle, rgba(160,160,175,0.8) 0%, rgba(140,140,155,0.4) 40%, rgba(120,120,135,0.1) 70%, transparent 85%)',
-            filter: 'blur(4px)',
+            background: 'radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(240,240,245,0.35) 40%, rgba(230,230,240,0.1) 70%, transparent 85%)',
+            filter: 'blur(5px)',
           }}
         />
       ))}
@@ -404,7 +404,7 @@ function ContactModal({ open, onClose, isDark }: { open: boolean; onClose: () =>
               top: '50%',
               width: size,
               height: size,
-              background: `radial-gradient(circle, ${isDark ? 'rgba(160,160,175,0.8)' : 'rgba(120,120,135,0.5)'} 0%, ${isDark ? 'rgba(140,140,155,0.3)' : 'rgba(100,100,115,0.15)'} 40%, transparent 70%)`,
+              background: `radial-gradient(circle, ${isDark ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.8)'} 0%, ${isDark ? 'rgba(240,240,250,0.25)' : 'rgba(240,240,245,0.35)'} 40%, transparent 70%)`,
               filter: `blur(${3 + Math.random() * 3}px)`,
             }}
             initial={{ scale: 0.3, opacity: 0.9, x: 0, y: 0 }}
