@@ -30,11 +30,20 @@ function SmokeTrail() {
       distAccum += Math.sqrt(dx * dx + dy * dy)
       lastPos.current = { x: e.clientX, y: e.clientY }
 
-      // Spawn a particle every ~12px of movement
-      if (distAccum > 12) {
+      // Spawn particles every ~6px of movement (more frequent = denser trail)
+      if (distAccum > 6) {
         distAccum = 0
-        const p: SmokeParticle = { id: idRef.current++, x: e.clientX, y: e.clientY, born: Date.now() }
-        setParticles(prev => [...prev, p])
+        // Spawn 2 particles with slight offset for thicker smoke
+        const spread = 4
+        for (let j = 0; j < 2; j++) {
+          const p: SmokeParticle = {
+            id: idRef.current++,
+            x: e.clientX + (Math.random() - 0.5) * spread,
+            y: e.clientY + (Math.random() - 0.5) * spread,
+            born: Date.now()
+          }
+          setParticles(prev => [...prev, p])
+        }
       }
     }
     window.addEventListener('mousemove', move)
@@ -57,14 +66,14 @@ function SmokeTrail() {
         <motion.div
           key={p.id}
           className="absolute rounded-full"
-          initial={{ x: p.x - 6, y: p.y - 6, scale: 0.3, opacity: 0.4 }}
-          animate={{ scale: 2.5, opacity: 0, y: p.y - 6 + 20 }}
-          transition={{ duration: 2, ease: 'easeOut' }}
+          initial={{ x: p.x - 10, y: p.y - 10, scale: 0.4, opacity: 0.7 }}
+          animate={{ scale: 3.5, opacity: 0, y: p.y - 10 + 30 }}
+          transition={{ duration: 2.5, ease: 'easeOut' }}
           style={{
-            width: 12,
-            height: 12,
-            background: 'radial-gradient(circle, rgba(180,180,190,0.5) 0%, rgba(140,140,150,0.15) 50%, transparent 70%)',
-            filter: 'blur(3px)',
+            width: 20,
+            height: 20,
+            background: 'radial-gradient(circle, rgba(160,160,175,0.8) 0%, rgba(140,140,155,0.4) 40%, rgba(120,120,135,0.1) 70%, transparent 85%)',
+            filter: 'blur(4px)',
           }}
         />
       ))}
